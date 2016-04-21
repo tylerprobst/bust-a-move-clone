@@ -9,13 +9,20 @@ $(document).ready(function () {
 
 	/* populates canvas with visible orbs */
 	GameCanvas.prototype.fillCanvas = function () {
-
+		var diff = 15;
+		for (var j=15; j<106; j+=30) {
+			for (var i=15; i<465;i+=30) {
+				orb = new Orb('red', [i, j]);
+				orb.drawOrb(orb.position[0], orb.position[1]);
+				diff += 30;	
+			}
+		}
 	};
 
 	GameCanvas.prototype.start = function () {
 		this.canvas.setAttribute('id', 'canvas');
-		this.canvas.width = 800;
-		this.canvas.height = 500;
+		this.canvas.width = 465;
+		this.canvas.height = 600;
 		
 		$('#canvas-area').html(this.canvas);
 	};
@@ -29,7 +36,7 @@ $(document).ready(function () {
 
 	/*populates grid with orbs*/
 	GameGrid.prototype.fillGrid = function () {
-
+		orb = new Orb('red', [i, j]);
 	};
 
     /* Orb Class */
@@ -43,11 +50,13 @@ $(document).ready(function () {
 	/* Draws singular Orb */
 	Orb.prototype.drawOrb = function (orbX, orbY) {
 		context = gameCanvas.context;
+		context.beginPath();
 		context.arc(orbX, orbY, this.diameter/2, 0, 2 * Math.PI, false);
 	    context.fillStyle = this.color;
 	    context.fill();
 	    context.lineWidth = 2;
 	    context.strokeStyle = '#003300';
+	    context.closePath();
 	    context.stroke();
 	};
 //						TO-DO:
@@ -59,13 +68,13 @@ $(document).ready(function () {
 //calculate how many orbs fit in a row
 //at start of game fill 5 rows with orbs
 //offset every other row (orb.diameter/2)
+//make contributions show up on github account
 
 	//start game! 
 	$('#start-button').click(function () {
 		gameCanvas = new GameCanvas;
 		gameCanvas.start();
-		orb = new Orb('red', [20,20]);
-		orb.drawOrb(orb.position[0], orb.position[1]);
+		gameCanvas.fillCanvas();
 	});
 
 
