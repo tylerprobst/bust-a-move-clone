@@ -1,0 +1,10 @@
+#canvas {
+	position: relative;
+	left: 250px;
+	border: black solid 1px;
+}
+
+.jumbotron {
+	text-align: center;
+}
+
