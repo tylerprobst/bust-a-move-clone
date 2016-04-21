@@ -8,13 +8,16 @@ $(document).ready(function () {
 	};
 
 	/* populates canvas with visible orbs */
-	GameCanvas.prototype.fillCanvas = function () {
-		var diff = 15;
-		for (var j=15; j<106; j+=30) {
-			for (var i=15; i<465;i+=30) {
-				orb = new Orb('red', [i, j]);
-				orb.drawOrb(orb.position[0], orb.position[1]);
-				diff += 30;	
+	GameCanvas.prototype.fillCanvas = function (gameGrid) {
+		for (var j=0; j<5; j++) {
+			for (var i=0; i<15;i++) {
+				var orb = gameGrid.grid[j][i],
+					orbX = 15 + (gameGrid.grid[j][i].position[0] * 30),
+					orbY = 15 + (gameGrid.grid[j][i].position[1] * 30);
+				
+				if (j % 2 != 0) orbY += 15; 
+		
+				orb.drawOrb(orbY, orbX);	
 			}
 		}
 	};
@@ -36,7 +39,17 @@ $(document).ready(function () {
 
 	/*populates grid with orbs*/
 	GameGrid.prototype.fillGrid = function () {
-		orb = new Orb('red', [i, j]);
+		this.rows = 15;
+		this.cols = 15;
+		
+		for (var j = 0; j<5; j++) {
+			var row = [];
+			for (var i = 0; i<this.rows; i++){
+				var orb = new Orb('red', [j, i]);
+				row.push(orb);
+			}
+			this.grid[j] = row;
+		}
 	};
 
     /* Orb Class */
@@ -73,8 +86,11 @@ $(document).ready(function () {
 	//start game! 
 	$('#start-button').click(function () {
 		gameCanvas = new GameCanvas;
+		gameGrid = new GameGrid;
+		console.log(gameGrid);
+		gameGrid.fillGrid();
 		gameCanvas.start();
-		gameCanvas.fillCanvas();
+		gameCanvas.fillCanvas(gameGrid);
 	});
 
 
