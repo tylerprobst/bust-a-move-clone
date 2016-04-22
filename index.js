@@ -8,16 +8,16 @@ $(document).ready(function () {
 	};
 
 	/* populates canvas with visible orbs */
-	GameCanvas.prototype.fillCanvas = function (gameGrid) {
+	GameCanvas.prototype.fillCanvas = function () {
 		for (var j=0; j<5; j++) {
 			for (var i=0; i<15;i++) {
-				var orb = gameGrid.grid[j][i],
-					orbX = 15 + (gameGrid.grid[j][i].position[0] * 30),
-					orbY = 15 + (gameGrid.grid[j][i].position[1] * 30);
+				var orb = this.grid.grid[j][i],
+					orbCol = 15 + (this.grid.grid[j][i].position[0] * 29), //29 substitues for the gap between rows.
+					orbRow = 15 + (this.grid.grid[j][i].position[1] * 30);
 				
-				if (j % 2 != 0) orbY += 15; 
+				if (j % 2 != 0) orbRow += 15; //offsets every other row
 		
-				orb.drawOrb(orbY, orbX);	
+				orb.drawOrb(orbRow, orbCol);	
 			}
 		}
 	};
@@ -31,10 +31,8 @@ $(document).ready(function () {
 	};
 
 	/* grid to store orbs and locations */
-	GameGrid = function (rows, cols) {
-		this.rows = rows;
-		this.cols = cols;
-		this.grid = [];
+	GameGrid = function () {
+		this.grid = []; //[row][col]
 	};
 
 	/*populates grid with orbs*/
@@ -45,7 +43,7 @@ $(document).ready(function () {
 		for (var j = 0; j<5; j++) {
 			var row = [];
 			for (var i = 0; i<this.rows; i++){
-				var orb = new Orb('red', [j, i]);
+				var orb = new Orb([j, i]);
 				row.push(orb);
 			}
 			this.grid[j] = row;
@@ -53,11 +51,17 @@ $(document).ready(function () {
 	};
 
     /* Orb Class */
-	Orb = function(color, position) {
-		this.position  = position; //array [x,y]
-		this.color     = color;
+	Orb = function(position) {
+		this.position  = position; //array
+		this.color     = randomColor();
 		this.neighbors = [];
 		this.diameter  = 30;
+	
+		function randomColor() {
+			var colors = ['#FFE600'/*yellow*/, '#C9C9C9'/*gray*/, '#FF0000'/*red*/, '#1464F4'/*blue*/, '#00EE00'/*green*/, '#FF00FF' /*purple*/];
+		
+			return colors[Math.floor(Math.random() * colors.length)];
+		};
 	};
 
 	/* Draws singular Orb */
@@ -86,11 +90,9 @@ $(document).ready(function () {
 	//start game! 
 	$('#start-button').click(function () {
 		gameCanvas = new GameCanvas;
-		gameGrid = new GameGrid;
-		console.log(gameGrid);
-		gameGrid.fillGrid();
 		gameCanvas.start();
-		gameCanvas.fillCanvas(gameGrid);
+		gameCanvas.grid.fillGrid();
+		gameCanvas.fillCanvas();
 	});
 
 
